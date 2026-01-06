@@ -1,72 +1,196 @@
-# Projects - Advanced Machine Learning ETHZ Automn 2024
+Advanced Machine Learning – ETH Zurich (Autumn 2024)
+====================================================
 
-## AML Project 1 - Age Prediction from Brain MRI Features 
+This repository contains multiple group projects completed as part of the **Advanced Machine Learning (AML)** course at **ETH Zurich**.The projects cover **regression**, **time-series classification**, and **deep learning–based medical image segmentation**, with a strong emphasis on robust preprocessing, principled model design, and rigorous evaluation.
 
-This repository is part of a group project for the Advanced Machine Learning course at **ETH Zurich**. The project focuses on predicting a person's age from brain MRI data using regression techniques. The primary goal is to preprocess the provided MRI-derived features and build a model that can predict age with high accuracy.
+Project 1 – Age Prediction from Brain MRI Features
+--------------------------------------------------
 
-### Project Overview 
+### Overview
 
-The main task is to predict the age of a person based on brain MRI features. The data has been perturbed with outliers, irrelevant features, and missing values to make the task more challenging. The workflow includes the following preprocessing steps:
- 
-1. **Outlier Detection:**  Identifying and handling outliers in the dataset.
- 
-2. **Feature Selection:**  Selecting relevant features to reduce dimensionality and improve model performance.
- 
-3. **Imputation of Missing Values:**  Filling in missing data to ensure compatibility with machine learning algorithms.
+The objective of this project is to **predict a subject’s age** from **brain MRI–derived features** using regression techniques.The dataset is intentionally challenging and includes **outliers**, **irrelevant features**, and **missing values**, requiring careful preprocessing before model training.
 
-After preprocessing, we will train regression models to predict the target variable (age) and evaluate performance using the Coefficient of Determination (R²) score.
+### Pipeline
 
-### Evaluation 
-
-The R² score will be used to measure the accuracy of the age predictions, with a baseline score of 0.5 required to pass the project.
-
-### Submission Requirements 
-The submission includes a file with two columns: `id` and `y`, where `y` is the predicted age. The project duration is from October 21 to November 11, with public and private leaderboards for evaluation.
-
-
-## AML Project 2 - Timeseries Classification: ECG Signal Analysis
-
-This repository is part of a group project for the **Advanced Machine Learning** course at **ETH Zurich**. The goal is to classify ECG signals into predefined categories using machine learning models.
-
-### Project Overview
-
-The task is to preprocess and classify ECG signals, handling challenges such as variable signal lengths and NaN values. The workflow includes:
-
-1. **Preprocessing:**  
-   Splitting raw ECG signals into individual heartbeats using libraries like `biosppy`, `neurokit`, or `hrv`.
-
-2. **Feature Extraction:**  
-   Extracting statistical features (e.g., mean, variance) to represent heartbeats.
-
-3. **Model Training:**  
-   Training classification models and evaluating performance using the **F1-score** (`micro` averaging).
+1.  **Outlier Detection**Identification and handling of anomalous samples and corrupted features.
+    
+2.  **Feature Selection**Removal of irrelevant and redundant features to reduce dimensionality and improve generalization.
+    
+3.  **Missing Value Imputation**Application of imputation strategies to ensure compatibility with machine learning models.
+    
+4.  **Regression Modeling**Training and evaluation of regression models to predict age from the cleaned feature space.
+    
 
 ### Evaluation
 
-The **F1-score** is the primary metric:
+*   Metric: Coefficient of Determination (R²)
+    
+*   Baseline requirement: R² ≥ 0.5
+    
 
-```python
-from sklearn.metrics import f1_score
-F1 = f1_score(y_true, y_pred, average='micro')
-```
-The baseline F1-score to pass the project is 0.7 on the public leaderboard.
+### Submission Format
+
+Predictions must be submitted as a CSV file with two columns:
+
+id,y
+
+where y corresponds to the predicted age.
+
+### Timeline
+
+*   Project period: October 21 – November 11
+    
+*   Evaluation: Public and private leaderboards
+    
+
+Project 2 – Time-Series Classification: ECG Signal Analysis
+-----------------------------------------------------------
+
+### Overview
+
+This project focuses on **classifying ECG signals** into predefined categories.The main challenges include **variable-length signals**, **NaN values**, and extracting meaningful features from raw biomedical time series.
+
+### Pipeline
+
+1.  **Preprocessing**
+    
+    *   Splitting raw ECG signals into individual heartbeats
+        
+    *   Recommended libraries: biosppy, neurokit, hrv
+        
+2.  **Feature Extraction**
+    
+    *   Computation of statistical descriptors per heartbeat (e.g., mean, variance).
+        
+3.  **Model Training**
+    
+    *   Supervised classification models trained on extracted features.
+        
+
+### Evaluation
+
+*   Metric: F1-score (micro-averaged)
+    
+*   Baseline requirement: F1 ≥ 0.7 on the public leaderboard
+    
 
 ### Submission Requirements
 
-- Submit predictions to the Kaggle competition.  
-- Each student must submit an individual description of their approach in Moodle.  
-- Teams are limited to **10 submissions per day**.
+*   Predictions submitted via Kaggle
+    
+*   Individual written report submitted on Moodle
+    
+*   Maximum of 10 submissions per day per team
+    
 
-### Tools and Resources
+### Timeline
 
-- Recommended libraries: `biosppy`, `neurokit`, `hrv`.  
-- A sample Jupyter Notebook is provided for preprocessing.
+*   Project period: November 11, 3 PM – December 2, 2 PM
+    
+*   Private leaderboard reveal: December 2, 3 PM
+    
 
-### Deadlines
+Project 3 – Echocardiography Mitral Valve Segmentation
+------------------------------------------------------
 
-- **Project period:** November 11, 3 PM – December 2, 2 PM.  
-- **Leaderboard access:**  
-  - **Public leaderboard:** Available during the competition.  
-  - **Private leaderboard:** Revealed after December 2, 3 PM.  
+### Overview
 
-Refer to the competition rules on Kaggle for further details.
+This project implements a **deep learning pipeline** for **mitral valve segmentation** in echocardiography videos.The solution is based on a **U-Net architecture** and a **two-stage training strategy** leveraging both amateur-annotated and expert-annotated datasets.
+
+Methodology
+-----------
+
+### 1\. Data Preprocessing (6\_PREPROCESSING2.ipynb)
+
+Robust preprocessing is critical for handling variability in echocardiography data.
+
+*   Image normalization to the \[0, 1\] range
+    
+*   Denoising using a pre-trained DRUNet model
+    
+*   Contrast enhancement via CLAHE
+    
+*   Padding to square shape and resizing to 224 × 224
+    
+*   Bounding box mask processed and used as an additional input channel
+    
+*   Ground truth masks refined using filtering, thresholding, dilation, and blurring
+    
+
+### 2\. Bounding Box Prediction (7\_TRAINING2\_BOX.ipynb)
+
+Since bounding boxes are not provided in the test set:
+
+*   A U-Net model is trained to predict bounding box masks
+    
+*   Training uses both amateur and expert datasets
+    
+*   Predicted boxes (guessed\_box) are generated for the test set
+    
+*   Some predicted boxes are manually refined before final segmentation
+    
+
+### 3\. Segmentation Model (model.py)
+
+*   Architecture: U-Net with encoder–decoder structure and skip connections
+    
+*   Input channels:
+    
+    *   Preprocessed grayscale frame
+        
+    *   Corresponding bounding box mask
+        
+*   Enhancement: Squeeze-and-Excitation (SE) blocks for channel-wise feature recalibration
+    
+
+### 4\. Two-Stage Training (8\_TRAINING2.ipynb)
+
+**Stage 1 – Amateur Data Training**
+
+*   Training on a large amateur-annotated dataset
+    
+*   Strong data augmentation (flips, rotations, affine transforms)
+    
+
+**Stage 2 – Expert Data Fine-Tuning**
+
+*   Fine-tuning on a smaller expert-annotated dataset
+    
+*   Lower learning rate for precise adaptation
+    
+*   Loss function: Power Jaccard Loss
+    
+*   Metrics: Dice coefficient and IoU
+    
+
+### 5\. Inference and Submission (9\_SUBMITTER2.ipynb)
+
+1.  Load the best fine-tuned segmentation model
+    
+2.  Generate segmentation masks using video frames and refined bounding boxes
+    
+3.  Rescale predictions to original video resolution
+    
+4.  Apply run-length encoding and generate submission.csv
+    
+
+Workflow
+--------
+
+Recommended execution order:
+
+1.  1\_images\_analysis.ipynb (optional exploration)
+    
+2.  6\_PREPROCESSING2.ipynb (final preprocessing)
+    
+3.  7\_TRAINING2\_BOX.ipynb (bounding box prediction)
+    
+4.  8\_TRAINING2.ipynb (two-stage segmentation training)
+    
+5.  9\_SUBMITTER2.ipynb (inference and submission)
+    
+
+Repository Structure
+--------------------
+
+Lab3/├── 1\_images\_analysis.ipynb├── 3\_PREPROCESSING.ipynb├── 6\_PREPROCESSING2.ipynb├── 7\_TRAINING2\_BOX.ipynb├── 8\_TRAINING2.ipynb├── 9\_SUBMITTER2.ipynb├── model.py├── dataset.py├── augment.py├── utils.py├── drunet/├── out/└── figures/
